@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="EM0MzQDrT0i0H3eBpOHunDXy4vE9RCtEstv6ogp5p5A" />
   <title>DL.AUTO - Vente de véhicules d'occasion</title>
   <meta name="description" content="DL.AUTO - Vente de voitures de qualité. Grand catalogue, recherche facile.">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,16 +21,16 @@
   </script>
 </head>
 <body class="bg-gray-900 text-white">
-  <!-- Logo et header -->
- <header class="bg-black shadow-lg sticky top-0 z-50 border-b-2 border-jaune">
-  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-    <a href="index.html" class="flex items-center hover:opacity-80 transition">
-      <div class="text-2xl font-black text-white mr-2">◆</div>
-      <h1 class="text-3xl font-black text-argent">DL.<span class="text-jaune">AUTO</span></h1>
-    </a>
-    <a href="tel:+33612345678" class="bg-jaune text-black px-6 py-2 rounded-lg font-bold hover:bg-yellow-500 transition">📞 Appeler</a>
-  </div>
-</header>
+  <!-- Header -->
+  <header class="bg-black shadow-lg sticky top-0 z-50 border-b-2 border-jaune">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center hover:opacity-80 transition">
+        <div class="text-2xl font-black text-white mr-2">◆</div>
+        <h1 class="text-3xl font-black text-argent">DL.<span class="text-jaune">AUTO</span></h1>
+      </a>
+      <a href="tel:+33612345678" class="bg-jaune text-black px-6 py-2 rounded-lg font-bold hover:bg-yellow-500 transition">📞 Appeler</a>
+    </div>
+  </header>
 
   <!-- Recherche principale -->
   <section class="bg-gradient-to-r from-black via-gray-800 to-argent py-20">
@@ -54,40 +53,7 @@
     </div>
   </section>
 
-  <!-- Marques populaires -->
-  <section class="py-16 bg-gray-900">
-    <div class="container mx-auto px-4">
-      <h3 class="text-3xl font-bold mb-8 text-center text-argent">Marques populaires</h3>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-4" id="brands">
-        <div class="bg-black p-6 rounded-lg shadow-lg text-center hover:shadow-yellow-500/50 transition cursor-pointer border border-jaune" onclick="filterByBrand('BMW')">
-          <div class="text-4xl mb-2 text-jaune">🚗</div>
-          <div class="font-bold text-argent">BMW</div>
-        </div>
-        <div class="bg-black p-6 rounded-lg shadow-lg text-center hover:shadow-yellow-500/50 transition cursor-pointer border border-jaune" onclick="filterByBrand('Mercedes-Benz')">
-          <div class="text-4xl mb-2 text-jaune">🚙</div>
-          <div class="font-bold text-argent">Mercedes</div>
-        </div>
-        <div class="bg-black p-6 rounded-lg shadow-lg text-center hover:shadow-yellow-500/50 transition cursor-pointer border border-jaune" onclick="filterByBrand('Audi')">
-          <div class="text-4xl mb-2 text-jaune">🚘</div>
-          <div class="font-bold text-argent">Audi</div>
-        </div>
-        <div class="bg-black p-6 rounded-lg shadow-lg text-center hover:shadow-yellow-500/50 transition cursor-pointer border border-jaune" onclick="filterByBrand('Toyota')">
-          <div class="text-4xl mb-2 text-jaune">🚐</div>
-          <div class="font-bold text-argent">Toyota</div>
-        </div>
-        <div class="bg-black p-6 rounded-lg shadow-lg text-center hover:shadow-yellow-500/50 transition cursor-pointer border border-jaune" onclick="filterByBrand('Kia')">
-          <div class="text-4xl mb-2 text-jaune">🏎️</div>
-          <div class="font-bold text-argent">Kia</div>
-        </div>
-        <div class="bg-black p-6 rounded-lg shadow-lg text-center hover:shadow-yellow-500/50 transition cursor-pointer border border-jaune" onclick="filterByBrand('Hyundai')">
-          <div class="text-4xl mb-2 text-jaune">🛻</div>
-          <div class="font-bold text-argent">Hyundai</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Dernières arrivées -->
+  <!-- Dernières arrivées (покажет 1 машину) -->
   <section class="py-16 bg-black">
     <div class="container mx-auto px-4">
       <h3 class="text-3xl font-bold mb-8 text-argent">Dernières arrivées</h3>
@@ -102,7 +68,7 @@
 
   <script>
     const cars = [
-     {
+      {
         id: "001",
         make: "Hyundai",
         model: "Getz",
@@ -116,29 +82,30 @@
         color: "noir",
         description: "Excellent état, bien entretenu, carnet d'entretien complet. Économique, idéal pour la ville.",
         photos: [
-                  "images/Hyundai-Getz-2006/1.jpg",
-                  "images/Hyundai-Getz-2006/2.jpg",
-                  "images/Hyundai-Getz-2006/3.jpg",
-                  "images/Hyundai-Getz-2006/4.jpg",
-                  "images/Hyundai-Getz-2006/5.jpg"
-                ],
-  contactPhone: "+33 6 12 34 56 78",
-  contactWhatsApp: "33612345678"
-}
+          "images/Hyundai-Getz-2006/1.jpg",
+          "images/Hyundai-Getz-2006/2.jpg",
+          "images/Hyundai-Getz-2006/3.jpg",
+          "images/Hyundai-Getz-2006/4.jpg",
+          "images/Hyundai-Getz-2006/5.jpg"
+        ],
+        contactPhone: "+33 6 12 34 56 78",
+        contactWhatsApp: "33612345678"
+      }
     ];
 
-    function renderLasts() {
-      const container = document.getElementById('lasts');
+    function renderLastCars() {
+      const container = document.getElementById('lastCars');
       const lastCars = cars.slice(-3);
       container.innerHTML = lastCars.map(car => `
         <div class="bg-black rounded-lg shadow-lg hover:shadow-yellow-500/25 transition border border-jaune">
           <img src="${car.photos[0]}" class="w-full h-48 object-cover rounded-t-lg border-b border-jaune">
           <div class="p-4">
-            <h3 class="font-bold text-xl text-argent">${car.make} ${car.model}</h3>
+            <h3 class="font-bold text-xl text-argent mb-2">${car.make} ${car.model}</h3>
             <p class="text-gray-400">${car.year} • ${car.mileage.toLocaleString()} km</p>
             <p class="text-2xl font-bold text-jaune mt-2">${car.price.toLocaleString()} €</p>
+            <p class="text-sm text-gray-500">📍 ${car.city}</p>
             <a href="car.html?id=${car.id}" class="block mt-4 bg-jaune text-black text-center py-2 rounded-lg font-bold hover:bg-yellow-500 transition">
-              Détails
+              Détails →
             </a>
           </div>
         </div>
@@ -152,10 +119,6 @@
       } else {
         window.location.href = 'catalog.html';
       }
-    }
-
-    function filterByBrand(brand) {
-      window.location.href = `catalog.html?make=${encodeURIComponent(brand)}`;
     }
 
     window.onload = renderLastCars;

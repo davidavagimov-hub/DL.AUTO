@@ -1,3 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DL.AUTO - Fiche véhicule</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'argent': '#C0C0C0',
+            'jaune': '#FFD700',
+            'noir': '#000000'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Лайтбокс для пролистывания фото */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.95);
+    }
+    .lightbox-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 90%;
+      max-height: 90%;
+      border: 3px solid #FFD700;
+      border-radius: 8px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 40px;
+      color: #FFD700;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .lightbox-prev, .lightbox-next {
+      position: absolute;
+      top: 50%;
+      font-size: 40px;
+      color: #FFD700;
+      cursor: pointer;
+      padding: 20px;
+      user-select: none;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+  </style>
+</head>
 <body class="bg-gray-900 text-white">
   <!-- Header -->
   <header class="bg-black shadow-lg sticky top-0 z-50 border-b-2 border-jaune">
@@ -36,7 +103,7 @@
         transmission: "mécanique",
         body: "citadine",
         color: "noir",
-        description: "Excellent état, bien entretenu, carnet d'entretien complet.",
+        description: "Excellent état, bien entretenu, carnet d'entretien complet. Économique, idéal pour la ville.",
         photos: [
           "images/Hyundai-Getz-2006/1.jpg",
           "images/Hyundai-Getz-2006/2.jpg",
@@ -49,140 +116,83 @@
       }
     ];
 
-    let filteredCars = [...cars];
+    let currentPhotoIndex = 0;
+    let currentPhotos = [];
 
     window.onload = function() {
-      renderFilters();
-      checkURLParams();
-      renderCars();
+      const params = new URLSearchParams(window.location.search);
+      const carId = params.get('id');
+      const car = cars.find(c => c.id === carId);
+      
+      if (car) {
+        renderCar(car);
+      } else {
+        document.getElementById('carDetail').innerHTML = `
+          <div class="text-center py-20">
+            <div class="text-6xl mb-4">😔</div>
+            <h2 class="text-3xl font-bold mb-4">Véhicule non trouvé</h2>
+            <a href="catalog.html" class="bg-jaune text-black px-6 py-3 rounded-lg font-bold">Retour au catalogue</a>
+          </div>
+        `;
+      }
     };
 
-    function renderFilters() {
-      const makes = [...new Set(cars.map(car => car.make))].sort();
-      const select = document.getElementById('filterMake');
-      makes.forEach(make => {
-        select.innerHTML += `<option value="${make}">${make}</option>`;
-      });
-    }
+    function renderCar(car) {
+      const container = document.getElementById('carDetail');
+      container.innerHTML = `
+        <!-- Галерея -->
+        <div class="bg-black rounded-lg shadow-lg mb-8 border border-jaune">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4" id="gallery">
+            ${car.photos.map((photo, index) => `
+              <img src="${photo}" class="w-full h-64 object-cover rounded-lg cursor-pointer hover:opacity-90 transition border border-jaune" onclick="openGallery(${index})">
+            `).join('')}
+          </div>
+        </div>
 
-    function checkURLParams() {
-      const params = new URLSearchParams(window.location.search);
-      const search = params.get('search');
-      const make = params.get('make');
-      
-      if (search) {
-        filteredCars = cars.filter(car => 
-          car.make.toLowerCase().includes(search.toLowerCase()) ||
-          car.model.toLowerCase().includes(search.toLowerCase())
-        );
-        document.getElementById('mainSearch')?.setAttribute('value', search);
-      } else if (make) {
-        filteredCars = cars.filter(car => car.make === make);
-        document.getElementById('filterMake').value = make;
-      }
-    }
-
-    function renderCars(carsToShow = filteredCars) {
-      const grid = document.getElementById('carsGrid');
-      const count = document.getElementById('resultsCount');
-      const noResults = document.getElementById('noResults');
-      
-      if (filteredCars.length === 0) {
-        grid.style.display = 'none';
-        noResults.classList.remove('hidden');
-      } else {
-        grid.style.display = 'grid';
-        noResults.classList.add('hidden');
-        grid.innerHTML = carsToShow.map(car => `
-          <div class="bg-black rounded-lg shadow-lg hover:shadow-yellow-500/25 transition border border-jaune">
-            <img src="${car.photos[0]}" class="w-full h-48 object-cover rounded-t-lg border-b border-jaune">
-            <div class="p-4">
-              <h3 class="font-bold text-xl text-argent mb-2">${car.make} ${car.model}</h3>
-              <p class="text-gray-400">${car.year} • ${car.mileage.toLocaleString()} km</p>
-              <p class="text-2xl font-bold text-jaune mt-2">${car.price.toLocaleString()} €</p>
-              <p class="text-sm text-gray-500">📍 ${car.city}</p>
-              <a href="car.html?id=${car.id}" class="block mt-4 bg-jaune text-black text-center py-2 rounded-lg font-bold hover:bg-yellow-500 transition">
-                Détails →
+        <!-- Информация -->
+        <div class="bg-black rounded-lg shadow-lg p-6 mb-8 border border-jaune">
+          <div class="flex justify-between items-start mb-6">
+            <h1 class="text-4xl font-bold text-argent">${car.make} ${car.model}</h1>
+            <span class="bg-jaune text-black px-3 py-1 rounded-full font-bold">${car.year}</span>
+          </div>
+          
+          <div class="text-4xl font-bold text-jaune mb-6">${car.price.toLocaleString()} €</div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <h3 class="text-xl font-bold mb-4 text-argent">📝 Caractéristiques</h3>
+              <table class="w-full text-gray-300">
+                <tr class="border-b border-gray-700"><td class="py-2 font-medium text-argent">Kilométrage :</td><td>${car.mileage.toLocaleString()} km</td></tr>
+                <tr class="border-b border-gray-700"><td class="py-2 font-medium text-argent">Moteur :</td><td>${car.engine}</td></tr>
+                <tr class="border-b border-gray-700"><td class="py-2 font-medium text-argent">Boîte :</td><td>${car.transmission}</td></tr>
+                <tr class="border-b border-gray-700"><td class="py-2 font-medium text-argent">Carrosserie :</td><td>${car.body}</td></tr>
+                <tr class="border-b border-gray-700"><td class="py-2 font-medium text-argent">Couleur :</td><td>${car.color}</td></tr>
+                <tr><td class="py-2 font-medium text-argent">Ville :</td><td>📍 ${car.city}</td></tr>
+              </table>
+            </div>
+            
+            <div>
+              <h3 class="text-xl font-bold mb-4 text-argent">📞 Contact</h3>
+              <p class="mb-4 text-lg text-jaune">📱 <strong>${car.contactPhone}</strong></p>
+              <a href="https://wa.me/${car.contactWhatsApp}?text=Bonjour, je suis intéressé par ${car.make} ${car.model}" target="_blank" 
+                 class="inline-block bg-green-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-600 transition mb-4">
+                💬 WhatsApp
+              </a>
+              <a href="tel:${car.contactPhone}" 
+                 class="block w-full text-center bg-jaune text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition">
+                📞 Appeler maintenant
               </a>
             </div>
           </div>
-        `).join('');
-      }
-      
-      count.textContent = `Trouvé: ${filteredCars.length} véhicule(s)`;
-    }
-
-    function applyFilters() {
-      const make = document.getElementById('filterMake').value;
-      const priceFrom = document.getElementById('priceFrom').value;
-      const priceTo = document.getElementById('priceTo').value;
-      const yearFrom = document.getElementById('yearFrom').value;
-      const yearTo = document.getElementById('yearTo').value;
-      
-      filteredCars = cars.filter(car => {
-        if (make && car.make !== make) return false;
-        if (priceFrom && car.price < +priceFrom) return false;
-        if (priceTo && car.price > +priceTo) return false;
-        if (yearFrom && car.year < +yearFrom) return false;
-        if (yearTo && car.year > +yearTo) return false;
-        return true;
-      });
-      
-      renderCars();
-    }
-
-    function resetFilters() {
-      document.getElementById('filterMake').value = '';
-      document.getElementById('priceFrom').value = '';
-      document.getElementById('priceTo').value = '';
-      document.getElementById('yearFrom').value = '';
-      document.getElementById('yearTo').value = '';
-      filteredCars = [...cars];
-      renderCars();
-    }
-
-    function renderLastCars() {
-      const container = document.getElementById('lastCars');
-      if (!container) return;
-      const lastCars = cars.slice(-3);
-      container.innerHTML = lastCars.map(car => `
-        <div class="bg-black rounded-lg shadow-lg hover:shadow-yellow-500/25 transition border border-jaune">
-          <img src="${car.photos[0]}" class="w-full h-48 object-cover rounded-t-lg border-b border-jaune">
-          <div class="p-4">
-            <h3 class="font-bold text-xl text-argent mb-2">${car.make} ${car.model}</h3>
-            <p class="text-gray-400">${car.year} • ${car.mileage.toLocaleString()} km</p>
-            <p class="text-2xl font-bold text-jaune mt-2">${car.price.toLocaleString()} €</p>
-            <a href="car.html?id=${car.id}" class="block mt-4 bg-jaune text-black text-center py-2 rounded-lg font-bold hover:bg-yellow-500 transition">
-              Détails →
-            </a>
-          </div>
         </div>
-      `).join('');
+
+        <!-- Description -->
+        <div class="bg-black rounded-lg shadow-lg p-6 border border-jaune">
+          <h3 class="text-2xl font-bold mb-4 text-argent">📋 Description</h3>
+          <p class="text-gray-300 leading-relaxed">${car.description}</p>
+        </div>
+      `;
     }
-
-    function quickSearch() {
-      const query = document.getElementById('mainSearch').value;
-      if (query.trim()) {
-        window.location.href = `catalog.html?search=${encodeURIComponent(query)}`;
-      } else {
-        window.location.href = 'catalog.html';
-      }
-    }
-
-    function filterByBrand(brand) {
-      window.location.href = `catalog.html?make=${encodeURIComponent(brand)}`;
-    }
-
-    window.onload = function() {
-      renderLastCars();
-      if (document.getElementById('mainSearch')) {
-        // На главной странице
-      }
-    };
-
-    // Для детальной страницы
-    let currentPhotoIndex = 0;
-    let currentPhotos = [];
 
     function openGallery(index) {
       currentPhotoIndex = index;
@@ -210,3 +220,4 @@
     }
   </script>
 </body>
+</html>

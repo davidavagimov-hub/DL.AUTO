@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="EM0MzQDrT0i0H3eBpOHunDXy4vE9RCtEstv6ogp5p5A" />
   <title>DL.AUTO - Catalogue</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -23,14 +22,14 @@
 <body class="bg-gray-900 text-white">
   <!-- Header -->
   <header class="bg-black shadow-lg sticky top-0 z-50 border-b-2 border-jaune">
-  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-    <a href="index.html" class="flex items-center hover:opacity-80 transition">
-      <div class="text-2xl font-black text-white mr-2">◆</div>
-      <h1 class="text-3xl font-black text-argent">DL.<span class="text-jaune">AUTO</span></h1>
-    </a>
-    <a href="tel:+33612345678" class="bg-jaune text-black px-6 py-2 rounded-lg font-bold hover:bg-yellow-500 transition">📞 Appeler</a>
-  </div>
-</header>
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center hover:opacity-80 transition">
+        <div class="text-2xl font-black text-white mr-2">◆</div>
+        <h1 class="text-3xl font-black text-argent">DL.<span class="text-jaune">AUTO</span></h1>
+      </a>
+      <a href="tel:+33612345678" class="bg-jaune text-black px-6 py-2 rounded-lg font-bold hover:bg-yellow-500 transition">📞 Appeler</a>
+    </div>
+  </header>
 
   <div class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
     <!-- Filtres -->
@@ -46,13 +45,13 @@
 
       <div class="mb-6">
         <label class="block text-sm font-medium mb-2 text-argent">Prix, €</label>
-        <input type="number" id="priceFrom" placeholder="min (€)" class="w-full bg-gray-800 border-2 border-jaune p-3 rounded-lg text-white mb-2 focus:border-yellow-500 transition">
-        <input type="number" id="priceTo" placeholder="max (€)" class="w-full bg-gray-800 border-2 border-jaune p-3 rounded-lg text-white focus:border-yellow-500 transition">
+        <input type="number" id="priceFrom" placeholder="Prix min (€)" class="w-full bg-gray-800 border-2 border-jaune p-3 rounded-lg text-white mb-2 focus:border-yellow-500 transition" value="0">
+        <input type="number" id="priceTo" placeholder="Prix max (€)" class="w-full bg-gray-800 border-2 border-jaune p-3 rounded-lg text-white focus:border-yellow-500 transition">
       </div>
 
       <div class="mb-6">
         <label class="block text-sm font-medium mb-2 text-argent">Année</label>
-        <input type="number" id="yearFrom" placeholder="Année min" class="w-full bg-gray-800 border-2 border-jaune p-3 rounded-lg text-white mb-2 focus:border-yellow-500 transition">
+        <input type="number" id="yearFrom" placeholder="Année min" class="w-full bg-gray-800 border-2 border-jaune p-3 rounded-lg text-white mb-2 focus:border-yellow-500 transition" value="2000">
         <input type="number" id="yearTo" placeholder="Année max" class="w-full bg-gray-800 border-2 border-jaune p-3 rounded-lg text-white focus:border-yellow-500 transition">
       </div>
 
@@ -81,7 +80,7 @@
 
   <script>
     const cars = [
-     {
+      {
         id: "001",
         make: "Hyundai",
         model: "Getz",
@@ -93,17 +92,17 @@
         transmission: "mécanique",
         body: "citadine",
         color: "noir",
-        description: "Excellent état, bien entretenu, carnet d'entretien complet. Économique, idéal pour la ville.",
+        description: "Excellent état, bien entretenu, carnet d'entretien complet.",
         photos: [
-                  "images/Hyundai-Getz-2006/1.jpg",
-                  "images/Hyundai-Getz-2006/2.jpg",
-                  "images/Hyundai-Getz-2006/3.jpg",
-                  "images/Hyundai-Getz-2006/4.jpg",
-                  "images/Hyundai-Getz-2006/5.jpg"
-                ],
-  contactPhone: "+33 6 12 34 56 78",
-  contactWhatsApp: "33612345678"
-     }
+          "images/Hyundai-Getz-2006/1.jpg",
+          "images/Hyundai-Getz-2006/2.jpg",
+          "images/Hyundai-Getz-2006/3.jpg",
+          "images/Hyundai-Getz-2006/4.jpg",
+          "images/Hyundai-Getz-2006/5.jpg"
+        ],
+        contactPhone: "+33 6 12 34 56 78",
+        contactWhatsApp: "33612345678"
+      }
     ];
 
     let filteredCars = [...cars];
@@ -132,13 +131,14 @@
           car.make.toLowerCase().includes(search.toLowerCase()) ||
           car.model.toLowerCase().includes(search.toLowerCase())
         );
+        document.getElementById('mainSearch')?.setAttribute('value', search);
       } else if (make) {
         filteredCars = cars.filter(car => car.make === make);
         document.getElementById('filterMake').value = make;
       }
     }
 
-    function renderCars() {
+    function renderCars(carsToShow = filteredCars) {
       const grid = document.getElementById('carsGrid');
       const count = document.getElementById('resultsCount');
       const noResults = document.getElementById('noResults');
@@ -149,16 +149,15 @@
       } else {
         grid.style.display = 'grid';
         noResults.classList.add('hidden');
-        grid.innerHTML = filteredCars.map(car => `
+        grid.innerHTML = carsToShow.map(car => `
           <div class="bg-black rounded-lg shadow-lg hover:shadow-yellow-500/25 transition border border-jaune">
             <img src="${car.photos[0]}" class="w-full h-48 object-cover rounded-t-lg border-b border-jaune">
-            <div class="p-5">
+            <div class="p-4">
               <h3 class="font-bold text-xl text-argent mb-2">${car.make} ${car.model}</h3>
-              <p class="text-gray-400 mb-1">${car.year} • ${car.mileage.toLocaleString()} km</p>
-              <p class="text-gray-400 mb-3">${car.engine} • ${car.transmission}</p>
-              <p class="text-3xl font-bold text-jaune mb-4">${car.price.toLocaleString()} €</p>
-              <p class="text-sm text-gray-500 mb-4">📍 ${car.city}</p>
-              <a href="car.html?id=${car.id}" class="block w-full bg-jaune text-black text-center py-3 rounded-lg font-bold hover:bg-yellow-500 transition">
+              <p class="text-gray-400">${car.year} • ${car.mileage.toLocaleString()} km</p>
+              <p class="text-2xl font-bold text-jaune mt-2">${car.price.toLocaleString()} €</p>
+              <p class="text-sm text-gray-500">📍 ${car.city}</p>
+              <a href="car.html?id=${car.id}" class="block mt-4 bg-jaune text-black text-center py-2 rounded-lg font-bold hover:bg-yellow-500 transition">
                 Détails →
               </a>
             </div>
@@ -196,6 +195,19 @@
       document.getElementById('yearTo').value = '';
       filteredCars = [...cars];
       renderCars();
+    }
+
+    function quickSearch() {
+      const query = document.getElementById('mainSearch').value;
+      if (query.trim()) {
+        window.location.href = `catalog.html?search=${encodeURIComponent(query)}`;
+      } else {
+        window.location.href = 'catalog.html';
+      }
+    }
+
+    function filterByBrand(brand) {
+      window.location.href = `catalog.html?make=${encodeURIComponent(brand)}`;
     }
   </script>
 </body>
