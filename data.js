@@ -25,7 +25,7 @@ const cars = [
 	  "images/Hyundai-Getz-2006/6.jpg",
 	  "images/Hyundai-Getz-2006/7.jpg"
     ],
-    contactPhone: "+33 6 12 34 56 78",
-    contactWhatsApp: "33612345678"
+    contactPhone: "+33 6 35 95 79 41",
+    contactWhatsApp: "33635957941"
   }
 ];
